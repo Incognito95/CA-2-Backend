@@ -30,7 +30,11 @@ public class User implements Serializable {
   @Size(min = 1, max = 255)
   @Column(name = "user_pass")
   private String userPass;
-  private String hashed = BCrypt.hashpw(userPass, BCrypt.gensalt());
+  @Basic(optional = false)
+  @NotNull
+  @Size(min = 1, max = 255)
+  @Column (name = "user_salt")
+  private String userSalt;
   @JoinTable(name = "user_roles", joinColumns = {
     @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
     @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
@@ -53,23 +57,14 @@ public class User implements Serializable {
   
   //TODO Change when password is hashed
    public boolean verifyPassword(String userPass){
-       if (BCrypt.checkpw(userPass, hashed)) {
-           System.out.println("it matches");
-       } else {
-           System.out.println("it does not match");
-       }
-       return (BCrypt.checkpw(userPass,BCrypt.gensalt()));
-//        return(pw.equals(userPass));
+       return BCrypt.checkpw(userPass,this.userPass);
     }
    
-
-
   public User(String userName, String userPass) {
     this.userName = userName;
-
-    this.userPass = userPass;
+    this.userSalt = BCrypt.gensalt(10);
+    this.userPass = encrypt(userPass);
   }
-
 
   public String getUserName() {
     return userName;
@@ -86,7 +81,7 @@ public class User implements Serializable {
   public void setUserPass(String userPass) {
     this.userPass = userPass;
   }
-
+  
   public List<Role> getRoleList() {
     return roleList;
   }
@@ -97,6 +92,10 @@ public class User implements Serializable {
 
   public void addRole(Role userRole) {
     roleList.add(userRole);
+  }
+  
+  private String encrypt (String password){
+      return BCrypt.hashpw(password, this.userSalt);
   }
 
 }
