@@ -82,4 +82,11 @@ public class DemoResource {
     public String dadJokes() {
         return "{\"msg\": \"Dad jokes: " + "\"}";
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("login")
+    public String login() {
+        return "{\"msg\": \"this is our login page: " + "\"}";
+    }
 }
