@@ -2,6 +2,10 @@ package rest;
 
 import com.google.gson.Gson;
 import entities.User;
+
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
@@ -72,7 +76,8 @@ public class DemoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("chucknorris")
-    public String checkNorris() {
+    public String chuckNorris() {
+        // https://api.chucknorris.io/jokes/random
         return "{\"msg\": \"chuck norris jokes: " + "\"}";
     }
     
